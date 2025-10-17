@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,8 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     private var frame: ImageView? = null
     private var imageUri: Uri? = null
-    private val RESULT_LOAD_IMAGE = 123
-    private val IMAGE_CAPTURE_CODE = 654
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun openGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-
-
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE)
+        resultLauncher1.launch(galleryIntent);
     }
 
     private fun openCamera() {
@@ -66,22 +63,30 @@ class MainActivity : AppCompatActivity() {
         imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE)
+        resultLauncher2.launch(cameraIntent);
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_CAPTURE_CODE && resultCode == Activity.RESULT_OK) {
-            val bitmap = uriToBitmap(imageUri!!)
-            frame?.setImageBitmap(bitmap)
-        }
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            imageUri = data.data
-            val bitmap = uriToBitmap(imageUri!!)
-            frame?.setImageBitmap(bitmap)
+    var resultLauncher1 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == Activity.RESULT_OK) {
+                imageUri = result.data!!.data
+                val bitmap = uriToBitmap(imageUri!!)
+                frame?.setImageBitmap(bitmap)
+            }
+
         }
     }
 
+    var resultLauncher2 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                val bitmap = uriToBitmap(imageUri!!)
+                frame?.setImageBitmap(bitmap)
+            }
+
+        }
+    }
+    
     private fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
         try {
             val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
