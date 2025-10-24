@@ -38,10 +38,24 @@ class NoteListActivity : AppCompatActivity() {
             addDummyNote()
         }
 
+        val buttonReset: Button = findViewById(R.id.buttonReset)
+        buttonReset.setOnClickListener {
+            resetNotes()
+        }
+
     }
 
     private fun listNotes() {
         val call = RetrofitInitializer().noteService().list()
+        refreshList(call)
+    }
+
+    private fun resetNotes() {
+        val call = RetrofitInitializer().noteService().resetList()
+        refreshList(call)
+    }
+
+    private fun refreshList(call: Call<List<Note>>){
         call.enqueue(object : Callback<List<Note>?> {
             override fun onResponse(call: Call<List<Note>?>?,
                                     response: Response<List<Note>?>?) {
@@ -50,7 +64,6 @@ class NoteListActivity : AppCompatActivity() {
                     configureList(notes)
                 }
             }
-
 
             override fun onFailure(call: Call<List<Note>?>?, t: Throwable?) {
                 t?.message?.let { Log.e("onFailure error", it) }
