@@ -2,6 +2,6 @@ package pt.ipt.api.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Note (
-    @SerializedName("title") val title: String?,
+data class APIResult (
+    @SerializedName("code") val code: String?,
     @SerializedName("description") val description: String?)
