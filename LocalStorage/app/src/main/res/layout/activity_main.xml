@@ -1,19 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/button"
+        android:onClick="escreverSharedPreferences"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Escrever Shared Preferences" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/button2"
+        android:onClick="lerSharedPreferences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ler Shared Preferences" />
+
+    <Button
+        android:id="@+id/button3"
+        android:onClick="escreverSharedPreferencesVariosFicheiros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escrever Shared Preferences Varios Ficheiros" />
+
+    <Button
+        android:id="@+id/button4"
+        android:onClick="lerSharedPreferencesVariosFicheiros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ler Shared Preferences Varios Ficheiros" />
+
+    <Button
+        android:id="@+id/button5"
+        android:onClick="escreverInternalStorage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escrever Internal Storage" />
+
+    <Button
+        android:id="@+id/button6"
+        android:onClick="lerInternalStorage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ler Internal Storage" />
+
+    <Button
+        android:id="@+id/button7"
+        android:onClick="escreverExternalStorage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escrever External Storage" />
+
+    <Button
+        android:id="@+id/button8"
+        android:onClick="lerExternalStorage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ler External Storage" />
+
+    <Button
+        android:id="@+id/button9"
+        android:onClick="escreverCache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escrever Cache" />
+
+    <Button
+        android:id="@+id/button10"
+        android:onClick="lerCache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ler Cache" />
+</LinearLayout>
