@@ -2,10 +2,12 @@ package pt.ipt.apiv2.retrofit.service
 
 import pt.ipt.apiv2.model.APIResult
 import pt.ipt.apiv2.model.Note
+import pt.ipt.apiv2.model.TokenJWT
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface NoteService {
@@ -18,5 +20,16 @@ interface NoteService {
     @FormUrlEncoded
     @POST("API/addNote.php")
     fun addNote(@Field("title") title: String?, @Field("description") description: String?): Call<APIResult>
+
+    @GET("API/getNotesBA.php")
+    fun listBA(@Header("Authorization") authorization: String): Call<List<Note>>
+
+    @GET("API/getNotesJWT.php")
+    fun listJWT(@Header("Authorization") token: String): Call<List<Note>>
+
+    @FormUrlEncoded
+    @POST("API/loginJWT.php")
+    fun loginJWT(@Field("username") username: String?,
+                 @Field("password") password: String?): Call<TokenJWT>
 
 }
