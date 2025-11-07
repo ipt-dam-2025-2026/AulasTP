@@ -72,12 +72,12 @@ class NoteListActivity : AppCompatActivity() {
     }
 
     private fun listNotesBA() {
-        val call = RetrofitInitializer().noteService().listBA( Credentials.basic("admin", "admin"))
+        val call = RetrofitInitializer().noteService().listBA( Credentials.basic("XXXX", "XXXX"))
         refreshList(call)
     }
 
     private fun listNotesJWT() {
-        loginJWT("admin", "admin") {
+        loginJWT("XXXX", "XXXX") {
             Toast.makeText(this,"Token " + it?.token,Toast.LENGTH_SHORT).show()
             val call = RetrofitInitializer().noteService().listJWT(token = "Bearer "+it?.token);
             refreshList(call)
