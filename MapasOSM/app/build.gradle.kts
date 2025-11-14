@@ -36,7 +36,10 @@ android {
 }
 
 dependencies {
-
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
+    implementation("org.osmdroid:osmdroid-wms:6.1.14")
+    implementation("org.osmdroid:osmdroid-mapsforge:6.1.14")
+    implementation("org.osmdroid:osmdroid-geopackage:6.1.14")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
