@@ -1,7 +1,11 @@
-package pt.ipt.mapasosm
+package pt.ipt.mygps
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,10 +24,12 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.compass.CompassOverlay
 import java.util.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LocationListener {
 
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1
     private lateinit var map : MapView
+    private lateinit var locationManager: LocationManager
+    private val locationPermissionCode = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         requestPermissionsIfNecessary(arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -45,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         ))
 
+        // configura o mapa
         Configuration.getInstance().setUserAgentValue(this.getPackageName())
         map = findViewById(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
@@ -54,17 +60,14 @@ class MainActivity : AppCompatActivity() {
         var compassOverlay = CompassOverlay(this, map)
         compassOverlay.enableCompass()
         map.overlays.add(compassOverlay)
-        var point = GeoPoint(39.60068, -8.38967)
-        var startMarker = Marker(map)
-        startMarker.position = point
-        startMarker.infoWindow = MarkerWindow(map, this)
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-        map.overlays.add(startMarker)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            map.controller.setCenter(point)
-        }, 1000) // espera 1 Segundo para centrar o mapa
-
+        // inicia o GPS
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if ((ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            requestPermissions( arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
 
     }
 
@@ -84,6 +87,19 @@ class MainActivity : AppCompatActivity() {
                 permissionsToRequest.toArray(arrayOf<String>()),
                 REQUEST_PERMISSIONS_REQUEST_CODE);
         }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        var point = GeoPoint(location.latitude, location.longitude)
+        var startMarker = Marker(map)
+        startMarker.position = point
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+        map.overlays.add(startMarker)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            map.controller.setCenter(point)
+        }, 1000) // espera 1 Segundo para centrar o mapa
+
     }
 
 
