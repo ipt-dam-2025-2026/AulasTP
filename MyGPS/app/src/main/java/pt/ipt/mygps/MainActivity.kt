@@ -3,6 +3,7 @@ package pt.ipt.mygps
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -21,8 +22,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.compass.CompassOverlay
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var map : MapView
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
+
+    private lateinit var polyline: Polyline
+    private lateinit var pathPoints: ArrayList<GeoPoint>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +66,14 @@ class MainActivity : AppCompatActivity(), LocationListener {
         compassOverlay.enableCompass()
         map.overlays.add(compassOverlay)
 
+        pathPoints = ArrayList()
+        polyline = Polyline()
+        polyline.setColor(Color.RED)
+        polyline.setWidth(20F)
+        map.getOverlays().add(polyline)
+
+
+
         // inicia o GPS
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if ((ContextCompat.checkSelfPermission(this,
@@ -91,10 +104,14 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     override fun onLocationChanged(location: Location) {
         var point = GeoPoint(location.latitude, location.longitude)
-        var startMarker = Marker(map)
-        startMarker.position = point
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-        map.overlays.add(startMarker)
+        //var startMarker = Marker(map)
+        //startMarker.position = point
+        //startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+        //map.overlays.add(startMarker)
+
+        pathPoints.add(point);
+        polyline.setPoints(pathPoints);
+
 
         Handler(Looper.getMainLooper()).postDelayed({
             map.controller.setCenter(point)
